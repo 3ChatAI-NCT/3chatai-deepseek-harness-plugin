@@ -1,6 +1,7 @@
 # Public source and build inputs only.
 /*
 !/.gitignore
+!/.github/
 !/README.md
 !/README.en.md
 !/LICENSE

@@ -113,3 +113,11 @@ description:
 本地已有 `dsh.bundle`、对应 patch、真实运行代码及官方包的 peerDependencies。当前只支持预构建安装，因此正式投稿前需要将最终 `.tgz` 发布为 GitHub Release 附件，并在条目中添加真实 `tarball` 地址。若使用 `releases/latest/download/`，附件名应固定为 `3chat-customer-growth.tgz`；带版本的文件名应绑定具体 release tag。
 
 提交前将这次源码与文档同步到目标仓库，添加 `dsh-plugin` topic，并确认仓库创建满一天、仍在维护且未被重复收录。社区 CI 与维护者审核由对方执行。本地测试范围见上文，目标 DSH 桌面安装与真实渠道流程仍需验收。
+
+## CI 与标签发布
+
+PR 和 main 更新运行 CI / check：检查已跟踪文件、扫描 Git 历史与源码中的秘密，执行 npm ci 和 npm run pack，并保存安装包与 SHA256 校验文件。CI 不执行真实渠道发送；桌面验收范围仍按上文执行。
+
+先将版本变更合入 main 并确认 CI 通过，再推送与 package.json 一致的 v<version> 标签。Release 要求标签提交属于 main，重新完成同样检查后发布 3chat-customer-growth.tgz、SHA256SUMS 和记录源码提交的 source.json。含预发布后缀的版本标记为 prerelease；未推送标签时不会发布。不要移动已发布标签，修订使用新版本。
+
+Actions 固定完整提交 SHA；构建只有读取权限，checkout 不保存凭据。仅发布任务拥有 contents: write，下载已验证构件、核对校验和并发布，不执行项目源码或安装依赖。秘密扫描器固定版本和下载哈希，并先检测合成凭据确认有效。

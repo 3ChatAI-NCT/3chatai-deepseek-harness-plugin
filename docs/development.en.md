@@ -113,3 +113,11 @@ description:
 The local project has `dsh.bundle`, its patch, working code, and official packages declared as peer dependencies. Because installation currently requires a prebuilt archive, publish the final `.tgz` as a GitHub Release asset before submission and add its actual `tarball` URL to the entry. For `releases/latest/download/`, keep the asset name stable as `3chat-customer-growth.tgz`; a versioned filename should use a pinned release tag.
 
 Before submitting, publish the updated source and documentation to the target repository, add the `dsh-plugin` topic, and check that the repository is at least a day old, actively maintained, and not already listed. Community CI and maintainer review happen on their side. Local verification scope is described above; target DSH desktop installation and real-channel flows still need acceptance checks.
+
+## CI and tag releases
+
+Pull requests and main updates run CI / check: validate tracked paths, scan Git history and source for secrets, run npm ci and npm run pack, and upload the package with SHA256 checksums. CI does not send real messages; desktop acceptance remains as described above.
+
+Merge the version update into main and confirm CI passes before pushing a v<version> tag matching package.json. Release requires the tagged commit to belong to main, repeats the checks, and publishes 3chat-customer-growth.tgz, SHA256SUMS, and source.json identifying the source commit. Versions with a prerelease suffix are marked as prereleases. No tag means no release. Use a new version instead of moving a published tag.
+
+Actions are pinned to full commit SHAs. Build jobs have read-only permissions and checkout does not persist credentials. Only publication has contents: write; it downloads verified assets, checks hashes, and publishes without executing project code or installing dependencies. The scanner is pinned by version and download hash and tests a synthetic credential first.
