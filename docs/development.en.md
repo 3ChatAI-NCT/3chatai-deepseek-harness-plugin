@@ -74,7 +74,7 @@ Once a batch returns a `job_id`, query that original job. `accepted`, `sent`, an
 
 ## Progressive Skill loading and session context
 
-The retained skill assets from `1.0.4` live under `references/3chat-customer-growth-1.0.4/`: `.mcp.json`, the icon, `agents/openai.yaml`, the skill, and six references (10 files). The Codex plugin manifest has been removed. The business rules, references, and icon retain their contents. `.mcp.json` and `agents/openai.yaml` are original package metadata; DSH does not use them to create connections. The logical MCP name `3chat-customer-growth` is served by the 12 identically named tools exposed through the OAuth/Cordis proxy.
+The skill and DSH resources from `1.0.4` live under `references/3chat-customer-growth-1.0.4/`: the icon, skill, and six references (8 files). The original Codex plugin manifest, MCP connection declaration, and OpenAI skill configuration have been removed. The business rules, references, and icon retain their contents. The logical MCP name `3chat-customer-growth` is served by the 12 identically named tools exposed through the OAuth/Cordis proxy.
 
 The declaration chain is `dsh.bundle.patch` → `cordis.patch.yml` → `@deepseek-ai/dsh-skill-filesystem`. That row waits for `inject: [threeChat]` before evaluating `ctx.threeChat.skillRoot`, which points to `references/3chat-customer-growth-1.0.4/skills/`.
 

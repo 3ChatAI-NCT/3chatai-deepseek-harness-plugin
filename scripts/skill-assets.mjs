@@ -19,8 +19,8 @@ export async function skillAssets(root) {
   }
   await walk(resolve(base, prefix));
   const expected = [
-    '.mcp.json', 'assets/icon.png',
-    'skills/3chat-customer-growth/SKILL.md', 'skills/3chat-customer-growth/agents/openai.yaml',
+    'assets/icon.png',
+    'skills/3chat-customer-growth/SKILL.md',
     ...['conversation-search', 'customer-intelligence', 'errors-and-retries', 'group-operations', 'outbound-messaging', 'use-cases']
       .map(name => `skills/3chat-customer-growth/references/${name}.md`),
   ].map(path => `${prefix}/${path}`).sort();

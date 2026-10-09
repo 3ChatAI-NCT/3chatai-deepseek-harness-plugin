@@ -74,7 +74,7 @@ Client 同步当前实际语言；Host 尚未收到 Client 同步时，可以从
 
 ## Skill 渐进加载与会话上下文
 
-来自 `1.0.4` 的 Skill 与保留资源位于 `references/3chat-customer-growth-1.0.4/`，包括 `.mcp.json`、图标、`agents/openai.yaml`、Skill 和六份参考，共 10 个文件。Codex 插件清单已移除。Skill 业务规则、六份参考与图标保持原内容；`.mcp.json` 和 `agents/openai.yaml` 是原包元数据，DSH 不读取它们创建连接。Skill 中 `3chat-customer-growth` 的逻辑 MCP 名称，由现有 OAuth/Cordis 代理提供的 12 个同名工具满足。
+来自 `1.0.4` 的 Skill 与 DSH 所需资源位于 `references/3chat-customer-growth-1.0.4/`，包括图标、Skill 和六份参考，共 8 个文件。原包的 Codex 插件清单、MCP 连接声明和 OpenAI 技能配置已移除。Skill 业务规则、六份参考与图标保持原内容。Skill 中 `3chat-customer-growth` 的逻辑 MCP 名称，由现有 OAuth/Cordis 代理提供的 12 个同名工具满足。
 
 Skill 的声明链为 `dsh.bundle.patch` → `cordis.patch.yml` → `@deepseek-ai/dsh-skill-filesystem`。该行先等待 `inject: [threeChat]`，再计算 `ctx.threeChat.skillRoot`，指向 `references/3chat-customer-growth-1.0.4/skills/`。
 
