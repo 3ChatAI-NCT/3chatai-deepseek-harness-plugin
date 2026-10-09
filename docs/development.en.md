@@ -2,6 +2,16 @@
 
 [中文](development.md) · [English](development.en.md) · [Product guide](../README.en.md)
 
+## Install the prebuilt Release
+
+The default installation entry is the latest stable GitHub Release:
+
+```text
+https://github.com/3ChatAI-NCT/3chatai-deepseek-harness-plugin/releases/latest/download/3chat-customer-growth.tgz
+```
+
+Paste this URL into the official DSH **Plugins → Add plugin** dialog. It downloads the prebuilt archive without compiling source on the user’s device. `latest` resolves at installation time; DSH does not currently auto-update plugins, so reinstall to upgrade. The repository URL is for source development and is not automatically redirected to a Release.
+
 ## Build from source
 
 Use Node.js 22 or later. Run from this repository's root:
@@ -11,7 +21,7 @@ npm ci
 npm run pack
 ```
 
-The build entry point is `scripts/build.mjs`; packaging uses `scripts/pack.mjs`. Compiled files go into `dist/`, and the archive is `dist/3chat-customer-growth-2.1.0.tgz`. End users install the prebuilt `.tgz`. Runtime `exports` in `package.json` point to `dist/`.
+The build entry point is `scripts/build.mjs`; packaging uses `scripts/pack.mjs`. Compiled files go into `dist/`, and the archive is `dist/3chat-customer-growth-2.1.1.tgz`. End users install the prebuilt `.tgz`. Runtime `exports` in `package.json` point to `dist/`.
 
 Only prebuilt `.tgz` installation is currently supported. Git excludes `dist/`, and the repository has no `prepare` script, so direct source installation with `dsh plugin add github:…` is unsupported. Use `npm run pack` above to compile before packaging; `npm pack` alone does not compile the source. This follows the [official packaging guide](https://deepseek-harness.github.io/deepseek-harness/en/develop/basic/publish) distinction between source and prebuilt distributions.
 
@@ -92,7 +102,7 @@ The host loading contract for `skill({name})` and `resourceBase` has also been c
 
 ## Release scope
 
-This repository contains only plugin source, build entry points, the bundled skill, and essential documentation. Static tool fixtures, mock services, synthetic customers, benchmarks, captures, screenshots, and acceptance evidence live in a separate development workspace. Production code uses only live remote tool definitions and contains no test snapshots, manual callback entry points, or evidence collection hooks.
+This repository contains only plugin source, build entry points, the bundled skill, and essential documentation. Final-package entry and resource tests run from this repository’s `test/` directory. Static tool fixtures, mock services, synthetic customers, benchmarks, captures, screenshots, and desktop acceptance evidence live in a separate development workspace. Production code uses only live remote tool definitions and contains no test snapshots, manual callback entry points, or evidence collection hooks.
 
 Before release, verify source and the final package in that workspace, then check installation, authorization, restart, and upgrade on the target DSH desktop version. Use authorized test recipients for real-channel send tests. Keep each regional README, plugin description, and panel copy aligned. Chinese material describes domestic channels and English material describes global channels; both use DeepSeek Harness as the plugin entry point.
 
@@ -103,6 +113,7 @@ The [awesome-dsh-plugin contribution guide](https://github.com/awesome-dsh-plugi
 
 ```yaml
 url: https://github.com/3ChatAI-NCT/3chatai-deepseek-harness-plugin
+tarball: https://github.com/3ChatAI-NCT/3chatai-deepseek-harness-plugin/releases/latest/download/3chat-customer-growth.tgz
 name: 3ChatAI-NCT/3chatai-deepseek-harness-plugin
 category: tools
 description:
@@ -110,13 +121,13 @@ description:
   zh: '将 DeepSeek Harness 接入 3Chat，查询客户与会话、读取上下文、确认后发送消息并跟踪批次结果。'
 ```
 
-The local project has `dsh.bundle`, its patch, working code, and official packages declared as peer dependencies. Because installation currently requires a prebuilt archive, publish the final `.tgz` as a GitHub Release asset before submission and add its actual `tarball` URL to the entry. For `releases/latest/download/`, keep the asset name stable as `3chat-customer-growth.tgz`; a versioned filename should use a pinned release tag.
+The local project has `dsh.bundle`, its patch, working code, and official packages declared as peer dependencies. The entry now points to the latest Release asset with its stable filename; verify the final `.tgz` before every release. For `releases/latest/download/`, keep the asset name stable as `3chat-customer-growth.tgz`; a versioned filename should use a pinned release tag.
 
 Before submitting, publish the updated source and documentation to the target repository, add the `dsh-plugin` topic, and check that the repository is at least a day old, actively maintained, and not already listed. Community CI and maintainer review happen on their side. Local verification scope is described above; target DSH desktop installation and real-channel flows still need acceptance checks.
 
 ## CI and tag releases
 
-Pull requests and main updates run CI / check: validate tracked paths, scan Git history and source for secrets, run npm ci and npm run pack, and upload the package with SHA256 checksums. CI does not send real messages; desktop acceptance remains as described above.
+Pull requests and main updates run CI / check: validate tracked paths, scan Git history and source for secrets, run npm ci, npm run pack, and npm test to verify the final package entries, client module, locales, and Skill resources, then upload the package with SHA256 checksums. CI does not send real messages; desktop acceptance remains as described above.
 
 Merge the version update into main and confirm CI passes before pushing a v<version> tag matching package.json. Release requires the tagged commit to belong to main, repeats the checks, and publishes 3chat-customer-growth.tgz, SHA256SUMS, and source.json identifying the source commit. Versions with a prerelease suffix are marked as prereleases. No tag means no release. Use a new version instead of moving a published tag.
 

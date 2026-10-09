@@ -1,6 +1,6 @@
 {
   "name": "3chat-customer-growth",
-  "version": "2.1.0",
+  "version": "2.1.1",
   "type": "module",
   "description": "Run customer outreach across Instagram, Facebook Messenger, and WhatsApp from DeepSeek Harness. Review customer context, prepare personalized messages, and send through connected 3Chat channels after your confirmation. When customers reply, your configured 3Chat Agent can continue the conversation 24/7, answer questions, handle objections, and guide the next step or hand off to a person. Access and actions follow your organization’s 3Chat permissions.",
   "exports": {
@@ -88,7 +88,8 @@
   },
   "scripts": {
     "build": "node scripts/build.mjs",
-    "pack": "npm run build && node scripts/pack.mjs"
+    "pack": "npm run build && node scripts/pack.mjs",
+    "test": "node --test test/*.test.mjs"
   },
   "engines": {
     "node": ">=22"

@@ -40,9 +40,15 @@ These demonstrate discovery, drafting, and sending. Revise a draft before sendin
 Use official **DeepSeek Harness** and a **3Chat organization account** with customer access and channel sending permissions.
 
 1. Prepare your workspace and connect channels at [3Chat Global](https://3chat.ai). For autonomous reception, configure the channel’s Agent, knowledge, and human handoff rules.
-2. Add a prebuilt `.tgz` through the DSH plugin manager and enable it. If you do not have an archive, follow the [development guide](docs/development.en.md) to build from source.
+2. Open DSH **Plugins → Add plugin**, paste the [latest Release installation URL](https://github.com/3ChatAI-NCT/3chatai-deepseek-harness-plugin/releases/latest/download/3chat-customer-growth.tgz), then install and enable:
+
+   ```text
+   https://github.com/3ChatAI-NCT/3chatai-deepseek-harness-plugin/releases/latest/download/3chat-customer-growth.tgz
+   ```
 3. Open “3Chat Customer Growth,” select “Connect 3Chat,” and authorize the intended organization account in your browser.
 4. Return to chat. Start by finding a known customer and preparing a follow-up draft.
+
+This URL installs the prebuilt GitHub Release package. The repository URL is for source code; the official importer does not automatically redirect it to a Release. See the [development guide](docs/development.en.md) to build locally.
 
 The DSH interface language selects the service: Chinese uses the domestic service; other languages use the global service. Each service requires its own authorization. Uploads and sends also require DSH approval for that execution. Customer and channel access follow your organization’s grant.
 

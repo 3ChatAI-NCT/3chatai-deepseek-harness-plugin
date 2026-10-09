@@ -2,6 +2,16 @@
 
 [中文](development.md) · [English](development.en.md) · [产品说明](../README.md)
 
+## 安装预构建 Release
+
+默认安装入口为 GitHub 最新稳定 Release：
+
+```text
+https://github.com/3ChatAI-NCT/3chatai-deepseek-harness-plugin/releases/latest/download/3chat-customer-growth.tgz
+```
+
+在官方 DSH「插件 → 添加插件」中粘贴该地址即可安装。它直接下载预构建包，无需在用户设备编译源码。`latest` 在安装时解析；DSH 当前不自动升级插件，升级时重新安装。仓库地址用于源码开发，官方导入器不会自动查询 Release。
+
 ## 从源码构建
 
 需要 Node.js 22 或以上版本。在本仓库根目录运行：
@@ -11,7 +21,7 @@ npm ci
 npm run pack
 ```
 
-构建入口为 `scripts/build.mjs`，打包入口为 `scripts/pack.mjs`。编译文件位于 `dist/`，安装包位于 `dist/3chat-customer-growth-2.1.0.tgz`。安装用户直接使用预构建 `.tgz`。运行入口由 `package.json` 的 `exports` 指向 `dist/`。
+构建入口为 `scripts/build.mjs`，打包入口为 `scripts/pack.mjs`。编译文件位于 `dist/`，安装包位于 `dist/3chat-customer-growth-2.1.1.tgz`。安装用户直接使用预构建 `.tgz`。运行入口由 `package.json` 的 `exports` 指向 `dist/`。
 
 当前发布入口只承诺预构建 `.tgz`：Git 不跟踪 `dist/`，仓库也没有 `prepare`，因此不支持直接用 `dsh plugin add github:…` 安装源码。请使用上述 `npm run pack` 先编译再打包，单独运行 `npm pack` 不会触发编译。此选择符合[官方打包说明](https://deepseek-harness.github.io/deepseek-harness/en/develop/basic/publish)对源码与预构建产物的区分。
 
@@ -92,7 +102,7 @@ Skill 的声明链为 `dsh.bundle.patch` → `cordis.patch.yml` → `@deepseek-a
 
 ## 发布范围
 
-本仓库只保存插件源码、构建入口、内置 Skill 和必要文档。静态工具契约样本、测试服务、合成客户、benchmark、抓包、截图和验收证据均在独立开发工作区维护。生产代码只使用远端实时工具声明，不包含测试快照、手工回调入口或证据采集接口。
+本仓库只保存插件源码、构建入口、内置 Skill 和必要文档。最终安装包的运行入口与资源测试在本仓库 `test/` 中执行；静态工具契约样本、测试服务、合成客户、benchmark、抓包、截图和桌面验收证据在独立开发工作区维护。生产代码只使用远端实时工具声明，不包含测试快照、手工回调入口或证据采集接口。
 
 发布前在开发工作区验证代码与最终安装包，再在目标 DSH 桌面版本验收安装、授权、重启和升级。真实渠道发送测试需要使用已授权的测试对象。各区域的 README、插件详情和面板使用对应文案；中文介绍国内渠道，英文介绍海外渠道，两端均以 DeepSeek Harness 插件为入口。
 
@@ -103,6 +113,7 @@ Skill 的声明链为 `dsh.bundle.patch` → `cordis.patch.yml` → `@deepseek-a
 
 ```yaml
 url: https://github.com/3ChatAI-NCT/3chatai-deepseek-harness-plugin
+tarball: https://github.com/3ChatAI-NCT/3chatai-deepseek-harness-plugin/releases/latest/download/3chat-customer-growth.tgz
 name: 3ChatAI-NCT/3chatai-deepseek-harness-plugin
 category: tools
 description:
@@ -110,13 +121,13 @@ description:
   zh: '将 DeepSeek Harness 接入 3Chat，查询客户与会话、读取上下文、确认后发送消息并跟踪批次结果。'
 ```
 
-本地已有 `dsh.bundle`、对应 patch、真实运行代码及官方包的 peerDependencies。当前只支持预构建安装，因此正式投稿前需要将最终 `.tgz` 发布为 GitHub Release 附件，并在条目中添加真实 `tarball` 地址。若使用 `releases/latest/download/`，附件名应固定为 `3chat-customer-growth.tgz`；带版本的文件名应绑定具体 release tag。
+本地已有 `dsh.bundle`、对应 patch、真实运行代码及官方包的 peerDependencies。条目已指向固定文件名的最新 Release 附件；每次发布仍需先验证最终 `.tgz`。若使用 `releases/latest/download/`，附件名应固定为 `3chat-customer-growth.tgz`；带版本的文件名应绑定具体 release tag。
 
 提交前将这次源码与文档同步到目标仓库，添加 `dsh-plugin` topic，并确认仓库创建满一天、仍在维护且未被重复收录。社区 CI 与维护者审核由对方执行。本地测试范围见上文，目标 DSH 桌面安装与真实渠道流程仍需验收。
 
 ## CI 与标签发布
 
-PR 和 main 更新运行 CI / check：检查已跟踪文件、扫描 Git 历史与源码中的秘密，执行 npm ci 和 npm run pack，并保存安装包与 SHA256 校验文件。CI 不执行真实渠道发送；桌面验收范围仍按上文执行。
+PR 和 main 更新运行 CI / check：检查已跟踪文件、扫描 Git 历史与源码中的秘密，执行 npm ci、npm run pack 与 npm test，验证最终安装包入口、界面模块、多语言资源与 Skill 后，保存安装包与 SHA256 校验文件。CI 不执行真实渠道发送；桌面验收范围仍按上文执行。
 
 先将版本变更合入 main 并确认 CI 通过，再推送与 package.json 一致的 v<version> 标签。Release 要求标签提交属于 main，重新完成同样检查后发布 3chat-customer-growth.tgz、SHA256SUMS 和记录源码提交的 source.json。含预发布后缀的版本标记为 prerelease；未推送标签时不会发布。不要移动已发布标签，修订使用新版本。
 

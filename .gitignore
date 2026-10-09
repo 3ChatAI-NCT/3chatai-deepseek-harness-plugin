@@ -12,6 +12,7 @@
 !/docs/
 !/references/
 !/scripts/
+!/test/
 
 node_modules/
 dist/

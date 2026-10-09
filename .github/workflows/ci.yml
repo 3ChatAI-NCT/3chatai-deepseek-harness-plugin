@@ -30,6 +30,8 @@ jobs:
         run: npm ci
       - name: Build and verify installation package
         run: npm run pack
+      - name: Test final installation package
+        run: npm test
       - name: Prepare release assets
         run: node scripts/prepare-release.mjs
       - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2

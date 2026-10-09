@@ -40,9 +40,15 @@
 需要官方 **DeepSeek Harness** 和具有客户查询、渠道发送权限的 **3Chat 组织账号**。
 
 1. 在 [3Chat 国内站](https://www.3chatai.cn/) 准备业务空间、连接渠道；需要自主接待时，配置该渠道的 Agent、知识和转人工规则。
-2. 通过 DSH 插件管理器添加预构建 `.tgz` 安装包并启用。没有安装包时，可按[开发说明](docs/development.md)从源码构建。
+2. 打开 DSH「插件 → 添加插件」，粘贴[最新 Release 安装地址](https://github.com/3ChatAI-NCT/3chatai-deepseek-harness-plugin/releases/latest/download/3chat-customer-growth.tgz)，安装后启用：
+
+   ```text
+   https://github.com/3ChatAI-NCT/3chatai-deepseek-harness-plugin/releases/latest/download/3chat-customer-growth.tgz
+   ```
 3. 打开“3Chat 私域客户运营”，点击“连接 3Chat”，在浏览器登录目标组织账号并授权。
 4. 返回对话，先查询一个已知客户，再准备一条跟进草稿。
+
+安装地址直接使用 GitHub Release 的预构建包。仓库首页链接用于查看源码；官方导入器不会将仓库地址自动转成 Release。自行构建见[开发说明](docs/development.md)。
 
 插件随 DSH 界面语言选择服务：中文连接国内服务，其他语言连接海外服务；两端分别授权。上传和发送还需通过 DSH 的本次执行确认。客户与渠道可见范围遵循组织授权。
 

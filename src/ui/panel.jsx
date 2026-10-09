@@ -68,7 +68,13 @@ export function createLocaleRuntime(ctx, api) {
   const dispose = () => { disposed = true; revision++; listeners.clear(); if (typeof off === 'function') off(); };
   ctx.effect(() => dispose);
   void select(snapshot.locale);
-  return { getSnapshot: () => snapshot, subscribe: listener => { listeners.add(listener); return () => listeners.delete(listener); }, ready: () => selection, isDisposed: () => disposed };
+  return {
+    getSnapshot: () => snapshot,
+    subscribe: listener => { listeners.add(listener); return () => listeners.delete(listener); },
+    ready: () => selection,
+    retry: () => select(snapshot.locale),
+    isDisposed: () => disposed,
+  };
 }
 
 const defaultLocaleRuntime = { getSnapshot: () => defaultLocaleSnapshot, subscribe: () => () => {} };
@@ -153,6 +159,7 @@ export function createPanel(api, localeRuntime = defaultLocaleRuntime) {
     const matching = localeSeat.ready && (!state.locale || state.locale === locale);
     const shown = matching ? state : { ...initialState, status: 'connecting' };
     const disabled = Boolean(busy) || !matching;
+    const readinessFailed = !localeSeat.ready && Boolean(localeSeat.error);
     const authorizationUrl = safeAuthorizationUrl(shown.authorizationUrl);
     const statusKey = ['disconnected', 'connecting', 'connected', 'reconnect-required', 'unavailable'].includes(shown.status) ? shown.status : 'unavailable';
     const displayedError = error || shown.error?.message;
@@ -187,7 +194,7 @@ export function createPanel(api, localeRuntime = defaultLocaleRuntime) {
           </div>}
         </> : <div className="tc-actions">
           <button className="tc-primary" disabled={disabled} onClick={() => rpc('connect')}>{tr(shown.status === 'reconnect-required' ? 'reconnect' : 'connect')}</button>
-          <button disabled={disabled} onClick={() => rpc('check')}>{tr('retry')}</button>
+          <button disabled={Boolean(busy) || (!readinessFailed && !matching)} onClick={() => readinessFailed ? void localeRuntime.retry() : rpc('check')}>{tr('retry')}</button>
         </div>}
         {displayedError && <p className="tc-error" role="alert">{displayedError === 'rpcError' ? tr('rpcError') : displayedError}</p>}
         <p className="tc-notice">{shown.scopeNotice || tr('scopeNotice')}</p>
