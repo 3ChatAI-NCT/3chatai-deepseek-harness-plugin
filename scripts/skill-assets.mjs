@@ -2,7 +2,7 @@ import { readdir, readFile } from 'node:fs/promises';
 import { resolve, dirname, relative, sep } from 'node:path';
 import { load } from 'js-yaml';
 
-/** Verify the complete upstream package and the skill's lazy Markdown graph. */
+/** Verify the retained skill assets and the skill's lazy Markdown graph. */
 export async function skillAssets(root) {
   const base = resolve(root);
   const prefix = 'references/3chat-customer-growth-1.0.4';
@@ -19,14 +19,12 @@ export async function skillAssets(root) {
   }
   await walk(resolve(base, prefix));
   const expected = [
-    '.codex-plugin/plugin.json', '.mcp.json', 'assets/icon.png',
+    '.mcp.json', 'assets/icon.png',
     'skills/3chat-customer-growth/SKILL.md', 'skills/3chat-customer-growth/agents/openai.yaml',
     ...['conversation-search', 'customer-intelligence', 'errors-and-retries', 'group-operations', 'outbound-messaging', 'use-cases']
       .map(name => `skills/3chat-customer-growth/references/${name}.md`),
   ].map(path => `${prefix}/${path}`).sort();
-  if (JSON.stringify(files.sort()) !== JSON.stringify(expected)) throw new Error('Expected the complete original 1.0.4 package');
-  const plugin = JSON.parse(await readFile(resolve(base, prefix, '.codex-plugin/plugin.json'), 'utf8'));
-  if (plugin.name !== '3chat-customer-growth' || plugin.version !== '1.0.4') throw new Error('Unexpected upstream plugin identity');
+  if (JSON.stringify(files.sort()) !== JSON.stringify(expected)) throw new Error('Unexpected retained skill asset list');
   const source = await readFile(resolve(base, entry), 'utf8');
   const frontmatter = source.match(/^---\r?\n([\s\S]*?)\r?\n---/);
   const metadata = frontmatter && load(frontmatter[1]);
