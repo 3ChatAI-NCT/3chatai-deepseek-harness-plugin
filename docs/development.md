@@ -35,7 +35,7 @@ dist/         编译后的 JS、语言文件、第三方许可及 tgz；不入 G
 
 `package.json` 的 `dsh.bundle.patch` 指向 `cordis.patch.yml`，由 patch 分别插入服务提供插件、工具消费者和官方 Skill 文件系统提供器。`ThreeChatService` 定义并提供 `threeChat` 服务；工具消费者声明其依赖，面板通过 Typert 远程服务调用同一个连接。服务、工具和 Skill 提供器分别加载，依赖就绪后启用；卸载时各自释放注册、订阅与连接资源。
 
-面板和对话工具共用当前语言对应的连接。中文（`zh`）使用国内服务 `https://app.3chatai.cn/mcp`，官网为 [3Chat 国内站](https://3chat.cn)；其他语言使用海外服务 `https://app.3chat.ai/mcp`，官网为 [3Chat 海外站](https://3chat.ai)。两条连接分别保存在 DSH credentials 服务的 `threechat-mcp/oauth` 与 `threechat-global/oauth` 中，国内凭据槽沿用原值。语言切换只选择连接与工具，不发起授权；已有授权可恢复连接并发现工具。已经发出的请求继续使用原服务，切换前排队或持有旧工具引用的调用会被拒绝，避免跨服务发送。授权后及恢复已有连接时发现远端工具，成功后注册技能规定的 12 项业务工具。连接发现完成后整体注册这 12 项工具的 schema；每次调用前刷新并验证远端 `inputSchema`，保留 MCP 原始结果。工具 schema 不属于下述 Skill 的逐步加载范围。上传和发送通过官方 `tools/pre-execute` 请求本次执行确认；传输层不自动重放写请求。
+面板和对话工具共用当前语言对应的连接。中文（`zh`）使用国内服务 `https://app.3chatai.cn/mcp`，官网为 [3Chat 国内站](https://www.3chatai.cn/)；其他语言使用海外服务 `https://app.3chat.ai/mcp`，官网为 [3Chat 海外站](https://3chat.ai)。两条连接分别保存在 DSH credentials 服务的 `threechat-mcp/oauth` 与 `threechat-global/oauth` 中，国内凭据槽沿用原值。语言切换只选择连接与工具，不发起授权；已有授权可恢复连接并发现工具。已经发出的请求继续使用原服务，切换前排队或持有旧工具引用的调用会被拒绝，避免跨服务发送。授权后及恢复已有连接时发现远端工具，成功后注册技能规定的 12 项业务工具。连接发现完成后整体注册这 12 项工具的 schema；每次调用前刷新并验证远端 `inputSchema`，保留 MCP 原始结果。工具 schema 不属于下述 Skill 的逐步加载范围。上传和发送通过官方 `tools/pre-execute` 请求本次执行确认；传输层不自动重放写请求。
 
 ## 区域文案与替换位置
 
