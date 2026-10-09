@@ -1,0 +1,97 @@
+{
+  "name": "3chat-customer-growth",
+  "version": "2.1.0",
+  "type": "module",
+  "description": "Run customer outreach across Instagram, Facebook Messenger, and WhatsApp from DeepSeek Harness. Review customer context, prepare personalized messages, and send through connected 3Chat channels after your confirmation. When customers reply, your configured 3Chat Agent can continue the conversation 24/7, answer questions, handle objections, and guide the next step or hand off to a person. Access and actions follow your organization’s 3Chat permissions.",
+  "exports": {
+    ".": "./dist/index.js",
+    "./tools": "./dist/tools.js",
+    "./client": "./dist/client.js",
+    "./package.json": "./package.json",
+    "./locale/*.json": "./dist/locale/*.json",
+    "./icon": "./references/3chat-customer-growth-1.0.4/assets/icon.png"
+  },
+  "files": [
+    "dist/*.js",
+    "dist/locale",
+    "dist/THIRD_PARTY_NOTICES.md",
+    "cordis.patch.yml",
+    "references/3chat-customer-growth-1.0.4",
+    "README.md",
+    "README.en.md",
+    "docs/development.md",
+    "docs/development.en.md",
+    "docs/usage.md",
+    "docs/usage.en.md",
+    "LICENSE"
+  ],
+  "meta": {
+    "title": {
+      "zh": "3Chat 私域客户运营",
+      "en": "3Chat Customer Growth"
+    },
+    "description": {
+      "zh": "通过微信、企业微信、小红书、抖音等已连接渠道查询、筛选客户。向单个或批量客户定向发送个性化消息。客户产生回复后，已配置的 3Chat Agent 可接续上下文，提供 7×24 小时自主接待，持续完成需求沟通、产品答疑、异议处理和购买引导，帮助商家将客户洞察转化为真实触达和成交机会",
+      "en": "Run customer outreach across Instagram, Facebook Messenger, and WhatsApp from DeepSeek Harness. Review customer context, prepare personalized messages, and send through connected 3Chat channels after your confirmation. When customers reply, your configured 3Chat Agent can continue the conversation 24/7, answer questions, handle objections, and guide the next step or hand off to a person. Access and actions follow your organization’s 3Chat permissions."
+    }
+  },
+  "dsh": {
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    },
+    "client": {
+      "platform": "web",
+      "immediately": true,
+      "inject": [
+        "@deepseek-ai/dsh-client-ui-plugin-manager",
+        "@deepseek-ai/dsh-client-locale",
+        "@deepseek-ai/dsh-api-remotes"
+      ]
+    }
+  },
+  "icon": "./references/3chat-customer-growth-1.0.4/assets/icon.png",
+  "peerDependencies": {
+    "@deepseek-ai/cordis": "~4.0.4",
+    "@deepseek-ai/dsh-typert-protocol": "0.2.0-rc.2",
+    "@deepseek-ai/schemastery": "~3.18.4"
+  },
+  "peerDependenciesMeta": {
+    "@deepseek-ai/cordis": {
+      "optional": true
+    },
+    "@deepseek-ai/dsh-typert-protocol": {
+      "optional": true
+    },
+    "@deepseek-ai/schemastery": {
+      "optional": true
+    }
+  },
+  "devDependencies": {
+    "@deepseek-ai/cordis": "4.0.4",
+    "@deepseek-ai/dsh-typert-protocol": "0.2.0-rc.2",
+    "@deepseek-ai/schemastery": "3.18.4",
+    "@modelcontextprotocol/client": "2.3.1",
+    "ajv": "^8.20.0",
+    "ajv-formats": "^3.0.1",
+    "esbuild": "^0.25.12",
+    "react": "19.1.1",
+    "zod": "^4.6.5",
+    "js-yaml": "^5.4.3"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/3ChatAI-NCT/3chatai-deepseek-harness-plugin.git"
+  },
+  "homepage": "https://github.com/3ChatAI-NCT/3chatai-deepseek-harness-plugin",
+  "bugs": {
+    "url": "https://github.com/3ChatAI-NCT/3chatai-deepseek-harness-plugin/issues"
+  },
+  "scripts": {
+    "build": "node scripts/build.mjs",
+    "pack": "npm run build && node scripts/pack.mjs"
+  },
+  "engines": {
+    "node": ">=22"
+  },
+  "license": "Apache-2.0"
+}

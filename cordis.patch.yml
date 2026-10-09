@@ -1,0 +1,18 @@
+# One provider, independent consumers. No Agent preset or DSH core is replaced.
+- insert:
+    - id: 3chat-mcp
+      name: '3chat-customer-growth'
+      config:
+        requestTimeoutMs: 30000
+        callbackTimeoutMs: 600000
+        loopbackPort: 43110
+    - id: threechat-tools
+      name: '3chat-customer-growth/tools'
+    - id: threechat-skills
+      name: '@deepseek-ai/dsh-skill-filesystem'
+      inject: [threeChat]
+      config:
+        providerName: 3chat-customer-growth
+        includeDefaultRoots: false
+        customSkillDirs: !!js '[ctx.threeChat.skillRoot]'
+        watch: false

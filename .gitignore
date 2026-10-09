@@ -1,0 +1,24 @@
+# Public source and build inputs only.
+/*
+!/.gitignore
+!/README.md
+!/README.en.md
+!/LICENSE
+!/package.json
+!/package-lock.json
+!/cordis.patch.yml
+!/src/
+!/docs/
+!/references/
+!/scripts/
+
+node_modules/
+dist/
+.DS_Store
+.env
+.env.*
+.credentials*
+*.pem
+*.key
+__pycache__/
+*.pyc
