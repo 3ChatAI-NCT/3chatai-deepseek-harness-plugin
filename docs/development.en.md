@@ -4,13 +4,13 @@
 
 ## Install the prebuilt Release
 
-Download the prebuilt package from the latest stable GitHub Release:
+In the latest official [DeepSeek Harness](https://www.deepseek.com/harness/), open **Plugins → Add plugin**, paste this full URL, then install and enable it:
 
 ```text
 https://github.com/3ChatAI-NCT/3chatai-deepseek-harness-plugin/releases/latest/download/3chat-customer-growth.tgz
 ```
 
-Download and keep the `.tgz` file in your browser, then paste its full path into the official DSH **Plugins → Add plugin** dialog, for example `/Users/your-name/Downloads/3chat-customer-growth.tgz`. No source compilation is needed. DSH does not currently auto-update plugins; to upgrade, uninstall, download the new package, and install it.
+The URL points to the prebuilt GitHub Release package; no source compilation is needed. DSH does not currently auto-update plugins; to upgrade, uninstall and reinstall using the same URL. If an older host encounters the cache issue below, download and keep the `.tgz` file and paste its full local path into the dialog.
 
 The pnpm 11.7.0 bundled with DSH 0.2.0-rc.2 can write a lock entry without integrity when reusing a remote tarball cache, causing a later installation to fail with `ERR_PNPM_MISSING_TARBALL_INTEGRITY`. Pinned release URLs are also affected. Installing a local `.tgz` avoids this path without deleting user lockfiles, clearing caches, or disabling integrity checks. Repeated local installation has been verified; remote installation and cached reinstallation passed on the official source build of DSH 0.2.1-alpha.2 with pnpm 11.28.5. Older hosts can keep using local archives.
 

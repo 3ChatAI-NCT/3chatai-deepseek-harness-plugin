@@ -4,13 +4,13 @@
 
 ## 安装预构建 Release
 
-从 GitHub 最新稳定 Release 下载预构建安装包：
+在官方最新版本 [DeepSeek Harness](https://www.deepseek.com/harness/) 的「插件 → 添加插件」中粘贴以下完整地址，安装后启用：
 
 ```text
 https://github.com/3ChatAI-NCT/3chatai-deepseek-harness-plugin/releases/latest/download/3chat-customer-growth.tgz
 ```
 
-先在浏览器下载 `.tgz` 并保留文件，再在官方 DSH「插件 → 添加插件」中粘贴下载文件的完整路径，例如 `/Users/你的用户名/Downloads/3chat-customer-growth.tgz`。无需在用户设备编译源码。DSH 当前不自动升级插件，升级时先卸载，再下载并安装新版。
+该地址指向 GitHub Release 的预构建安装包，无需编译源码。DSH 当前不自动升级插件，升级时先卸载，再使用同一地址安装新版。旧宿主若出现下述缓存问题，可以下载并保留 `.tgz`，在添加插件时粘贴文件的完整路径。
 
 DSH 0.2.0-rc.2 随附的 pnpm 11.7.0 在复用远程 tarball 缓存时可能写出缺少 integrity 的锁条目，后续安装报 `ERR_PNPM_MISSING_TARBALL_INTEGRITY`。固定版本 URL 也会受影响。本地 `.tgz` 安装绕开该路径；无需删除用户锁文件、清空缓存或关闭完整性校验。此安装流程已验证重复安装，升级到内置 pnpm 11.28.5 的官方源码版 DSH 0.2.1-alpha.2 后，远程首次安装及缓存重装均已通过；旧宿主仍使用本地文件流程。
 

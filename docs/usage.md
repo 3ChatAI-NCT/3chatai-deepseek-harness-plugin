@@ -17,7 +17,7 @@
 
 ## 在 DeepSeek Harness 中连接
 
-先[下载最新安装包](https://github.com/3ChatAI-NCT/3chatai-deepseek-harness-plugin/releases/latest/download/3chat-customer-growth.tgz)，保留 `.tgz` 文件。在 DSH「插件 → 添加插件」中粘贴下载文件的完整路径，安装并启用。随后打开插件面板，点击“连接 3Chat”，在浏览器登录并授权目标组织账号。升级时先卸载，再下载并安装新版。自行构建见[开发说明](development.md)。
+使用官方最新版本 [DeepSeek Harness](https://www.deepseek.com/harness/)，在「插件 → 添加插件」中粘贴[最新安装包的完整地址](https://github.com/3ChatAI-NCT/3chatai-deepseek-harness-plugin/releases/latest/download/3chat-customer-growth.tgz)，安装并启用。随后打开插件面板，点击“连接 3Chat”，在浏览器登录并授权目标组织账号。升级时先卸载，再使用同一地址安装新版。自行构建见[开发说明](development.md)。
 
 授权完成后回到面板。可以使用“检查连接”确认服务可用，再在对话中查询一个已知客户。连接状态说明 MCP 已接通；Agent 的回复能力以 3Chat 中的配置为准。
 

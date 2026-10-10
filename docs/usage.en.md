@@ -17,7 +17,7 @@ Complete these settings in **3Chat**. The DSH plugin connects existing capabilit
 
 ## Connect in DeepSeek Harness
 
-First [download the latest package](https://github.com/3ChatAI-NCT/3chatai-deepseek-harness-plugin/releases/latest/download/3chat-customer-growth.tgz) and keep the `.tgz` file. In DSH **Plugins → Add plugin**, paste the downloaded file’s full path, then install and enable it. Open the plugin panel, select “Connect 3Chat,” and authorize the intended organization account in your browser. To upgrade, uninstall, download the new package, and install it. For local builds, follow the [development guide](development.en.md).
+Use the latest official [DeepSeek Harness](https://www.deepseek.com/harness/). In **Plugins → Add plugin**, paste the [full URL of the latest package](https://github.com/3ChatAI-NCT/3chatai-deepseek-harness-plugin/releases/latest/download/3chat-customer-growth.tgz), then install and enable it. Open the plugin panel, select “Connect 3Chat,” and authorize the intended organization account in your browser. To upgrade, uninstall and reinstall using the same URL. For local builds, follow the [development guide](development.en.md).
 
 After authorization, return to the panel. Use “Check connection” to check service availability, then find a known customer in chat. The connection state describes MCP access; reply capabilities depend on your Agent configuration in 3Chat.
 
