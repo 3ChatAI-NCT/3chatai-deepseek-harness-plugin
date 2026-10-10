@@ -34,6 +34,11 @@ test('final TGZ loads host, tools, client, and localized Skill resources', async
   assert.ok(files.includes('dist/locale/zh.json'));
   assert.ok(files.some(file => file.endsWith('/skills/3chat-customer-growth/SKILL.md')));
   assert.equal(manifest.scripts, undefined, 'published package has no install-time scripts');
+  assert.equal(manifest.devDependencies, undefined, 'build dependency pins stay out of the published package');
+  for (const dependency of ['@deepseek-ai/cordis', '@deepseek-ai/dsh-typert-protocol', '@deepseek-ai/schemastery']) {
+    assert.equal(manifest.peerDependencies[dependency], '*', `${dependency} uses the host-provided version`);
+    assert.equal(manifest.peerDependenciesMeta[dependency].optional, true);
+  }
 
   const host = await import(pathToFileURL(exported('.')));
   assert.equal(typeof host.apply, 'function');

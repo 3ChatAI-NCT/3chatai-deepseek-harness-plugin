@@ -4,13 +4,15 @@
 
 ## Install the prebuilt Release
 
-The default installation entry is the latest stable GitHub Release:
+Download the prebuilt package from the latest stable GitHub Release:
 
 ```text
 https://github.com/3ChatAI-NCT/3chatai-deepseek-harness-plugin/releases/latest/download/3chat-customer-growth.tgz
 ```
 
-Paste this URL into the official DSH **Plugins → Add plugin** dialog. It downloads the prebuilt archive without compiling source on the user’s device. `latest` resolves at installation time; DSH does not currently auto-update plugins, so reinstall to upgrade. The repository URL is for source development and is not automatically redirected to a Release.
+Download and keep the `.tgz` file in your browser, then paste its full path into the official DSH **Plugins → Add plugin** dialog, for example `/Users/your-name/Downloads/3chat-customer-growth.tgz`. No source compilation is needed. DSH does not currently auto-update plugins; to upgrade, uninstall, download the new package, and install it.
+
+The pnpm 11.7.0 bundled with DSH 0.2.0-rc.2 can write a lock entry without integrity when reusing a remote tarball cache, causing a later installation to fail with `ERR_PNPM_MISSING_TARBALL_INTEGRITY`. Pinned release URLs are also affected. Installing a local `.tgz` avoids this path without deleting user lockfiles, clearing caches, or disabling integrity checks. Repeated local installation has been verified; the remote cache defect still needs an upstream pnpm fix.
 
 ## Build from source
 
@@ -21,11 +23,11 @@ npm ci
 npm run pack
 ```
 
-The build entry point is `scripts/build.mjs`; packaging uses `scripts/pack.mjs`. Compiled files go into `dist/`, and the archive is `dist/3chat-customer-growth-2.1.1.tgz`. End users install the prebuilt `.tgz`. Runtime `exports` in `package.json` point to `dist/`.
+The build entry point is `scripts/build.mjs`; packaging uses `scripts/pack.mjs`. Compiled files go into `dist/`, and the archive is `dist/3chat-customer-growth-2.1.2.tgz`. End users install the prebuilt `.tgz`. Runtime `exports` in `package.json` point to `dist/`.
 
 Only prebuilt `.tgz` installation is currently supported. Git excludes `dist/`, and the repository has no `prepare` script, so direct source installation with `dsh plugin add github:…` is unsupported. Use `npm run pack` above to compile before packaging; `npm pack` alone does not compile the source. This follows the [official packaging guide](https://deepseek-harness.github.io/deepseek-harness/en/develop/basic/publish) distinction between source and prebuilt distributions.
 
-The archive contains runtime code, the bundled skill, bilingual documentation, and license files, with no install-time scripts. The host supplies Cordis, Schemastery, Typert, and React; see `package.json` for compatible versions. Restart DSH after updating Host modules.
+The archive contains runtime code, the bundled skill, bilingual documentation, and license files, with no install-time scripts. Cordis, Schemastery, Typert, and React use host-provided modules. Runtime peer ranges are `*`, with no DSH version restriction. `devDependencies` pin only the build and test environment and are removed during packaging. Official DSH owns installation and loading checks. Restart DSH after updating Host modules.
 
 ## Directory responsibilities
 
@@ -121,7 +123,7 @@ description:
   zh: '将 DeepSeek Harness 接入 3Chat，查询客户与会话、读取上下文、确认后发送消息并跟踪批次结果。'
 ```
 
-The local project has `dsh.bundle`, its patch, working code, and official packages declared as peer dependencies. The entry now points to the latest Release asset with its stable filename; verify the final `.tgz` before every release. For `releases/latest/download/`, keep the asset name stable as `3chat-customer-growth.tgz`; a versioned filename should use a pinned release tag.
+The local project has `dsh.bundle`, its patch, working code, and official packages declared as peer dependencies. The entry points to the latest Release asset with its stable filename; verify the final `.tgz` before every release. Direct URL installation from a community entry still has the current host’s remote tarball cache limitation; users should follow the local archive installation steps above.
 
 Before submitting, publish the updated source and documentation to the target repository, add the `dsh-plugin` topic, and check that the repository is at least a day old, actively maintained, and not already listed. Community CI and maintainer review happen on their side. Local verification scope is described above; target DSH desktop installation and real-channel flows still need acceptance checks.
 

@@ -4,13 +4,15 @@
 
 ## 安装预构建 Release
 
-默认安装入口为 GitHub 最新稳定 Release：
+从 GitHub 最新稳定 Release 下载预构建安装包：
 
 ```text
 https://github.com/3ChatAI-NCT/3chatai-deepseek-harness-plugin/releases/latest/download/3chat-customer-growth.tgz
 ```
 
-在官方 DSH「插件 → 添加插件」中粘贴该地址即可安装。它直接下载预构建包，无需在用户设备编译源码。`latest` 在安装时解析；DSH 当前不自动升级插件，升级时重新安装。仓库地址用于源码开发，官方导入器不会自动查询 Release。
+先在浏览器下载 `.tgz` 并保留文件，再在官方 DSH「插件 → 添加插件」中粘贴下载文件的完整路径，例如 `/Users/你的用户名/Downloads/3chat-customer-growth.tgz`。无需在用户设备编译源码。DSH 当前不自动升级插件，升级时先卸载，再下载并安装新版。
+
+DSH 0.2.0-rc.2 随附的 pnpm 11.7.0 在复用远程 tarball 缓存时可能写出缺少 integrity 的锁条目，后续安装报 `ERR_PNPM_MISSING_TARBALL_INTEGRITY`。固定版本 URL 也会受影响。本地 `.tgz` 安装绕开该路径；无需删除用户锁文件、清空缓存或关闭完整性校验。此安装流程已验证重复安装，宿主 pnpm 的远程缓存缺陷仍需上游修复。
 
 ## 从源码构建
 
@@ -21,11 +23,11 @@ npm ci
 npm run pack
 ```
 
-构建入口为 `scripts/build.mjs`，打包入口为 `scripts/pack.mjs`。编译文件位于 `dist/`，安装包位于 `dist/3chat-customer-growth-2.1.1.tgz`。安装用户直接使用预构建 `.tgz`。运行入口由 `package.json` 的 `exports` 指向 `dist/`。
+构建入口为 `scripts/build.mjs`，打包入口为 `scripts/pack.mjs`。编译文件位于 `dist/`，安装包位于 `dist/3chat-customer-growth-2.1.2.tgz`。安装用户直接使用预构建 `.tgz`。运行入口由 `package.json` 的 `exports` 指向 `dist/`。
 
 当前发布入口只承诺预构建 `.tgz`：Git 不跟踪 `dist/`，仓库也没有 `prepare`，因此不支持直接用 `dsh plugin add github:…` 安装源码。请使用上述 `npm run pack` 先编译再打包，单独运行 `npm pack` 不会触发编译。此选择符合[官方打包说明](https://deepseek-harness.github.io/deepseek-harness/en/develop/basic/publish)对源码与预构建产物的区分。
 
-安装包包含运行代码、内置 Skill、双语说明和许可文件，无安装时脚本。宿主提供 Cordis、Schemastery、Typert 与 React；兼容版本见 `package.json`。更新 Host 模块后重启 DSH。
+安装包包含运行代码、内置 Skill、双语说明和许可文件，无安装时脚本。Cordis、Schemastery、Typert 与 React 使用宿主提供的模块；运行时 peer 版本范围为 `*`，不限定 DSH 版本。`devDependencies` 仅锁定构建和测试所用版本，打包时移除。安装与加载检查由 DSH 官方执行。更新 Host 模块后重启 DSH。
 
 ## 目录职责
 
@@ -121,7 +123,7 @@ description:
   zh: '将 DeepSeek Harness 接入 3Chat，查询客户与会话、读取上下文、确认后发送消息并跟踪批次结果。'
 ```
 
-本地已有 `dsh.bundle`、对应 patch、真实运行代码及官方包的 peerDependencies。条目已指向固定文件名的最新 Release 附件；每次发布仍需先验证最终 `.tgz`。若使用 `releases/latest/download/`，附件名应固定为 `3chat-customer-growth.tgz`；带版本的文件名应绑定具体 release tag。
+本地已有 `dsh.bundle`、对应 patch、真实运行代码及官方包的 peerDependencies。条目指向固定文件名的最新 Release 附件；每次发布仍需先验证最终 `.tgz`。当前宿主的远程 tarball 缓存问题未修复，社区条目的直接 URL 安装仍有该限制；用户安装按上述本地文件流程执行。
 
 提交前将这次源码与文档同步到目标仓库，添加 `dsh-plugin` topic，并确认仓库创建满一天、仍在维护且未被重复收录。社区 CI 与维护者审核由对方执行。本地测试范围见上文，目标 DSH 桌面安装与真实渠道流程仍需验收。
 
