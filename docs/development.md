@@ -12,7 +12,7 @@ https://github.com/3ChatAI-NCT/3chatai-deepseek-harness-plugin/releases/latest/d
 
 先在浏览器下载 `.tgz` 并保留文件，再在官方 DSH「插件 → 添加插件」中粘贴下载文件的完整路径，例如 `/Users/你的用户名/Downloads/3chat-customer-growth.tgz`。无需在用户设备编译源码。DSH 当前不自动升级插件，升级时先卸载，再下载并安装新版。
 
-DSH 0.2.0-rc.2 随附的 pnpm 11.7.0 在复用远程 tarball 缓存时可能写出缺少 integrity 的锁条目，后续安装报 `ERR_PNPM_MISSING_TARBALL_INTEGRITY`。固定版本 URL 也会受影响。本地 `.tgz` 安装绕开该路径；无需删除用户锁文件、清空缓存或关闭完整性校验。此安装流程已验证重复安装，宿主 pnpm 的远程缓存缺陷仍需上游修复。
+DSH 0.2.0-rc.2 随附的 pnpm 11.7.0 在复用远程 tarball 缓存时可能写出缺少 integrity 的锁条目，后续安装报 `ERR_PNPM_MISSING_TARBALL_INTEGRITY`。固定版本 URL 也会受影响。本地 `.tgz` 安装绕开该路径；无需删除用户锁文件、清空缓存或关闭完整性校验。此安装流程已验证重复安装，升级到内置 pnpm 11.28.5 的官方源码版 DSH 0.2.1-alpha.2 后，远程首次安装及缓存重装均已通过；旧宿主仍使用本地文件流程。
 
 ## 从源码构建
 
@@ -47,7 +47,7 @@ dist/         编译后的 JS、语言文件、第三方许可及 tgz；不入 G
 
 `package.json` 的 `dsh.bundle.patch` 指向 `cordis.patch.yml`，由 patch 分别插入服务提供插件、工具消费者和官方 Skill 文件系统提供器。`ThreeChatService` 定义并提供 `threeChat` 服务；工具消费者声明其依赖，面板通过 Typert 远程服务调用同一个连接。服务、工具和 Skill 提供器分别加载，依赖就绪后启用；卸载时各自释放注册、订阅与连接资源。
 
-面板和对话工具共用当前语言对应的连接。中文（`zh`）使用国内服务 `https://app.3chatai.cn/mcp`，官网为 [3Chat 国内站](https://www.3chatai.cn/)；其他语言使用海外服务 `https://app.3chat.ai/mcp`，官网为 [3Chat 海外站](https://3chat.ai)。两条连接分别保存在 DSH credentials 服务的 `threechat-mcp/oauth` 与 `threechat-global/oauth` 中，国内凭据槽沿用原值。语言切换只选择连接与工具，不发起授权；已有授权可恢复连接并发现工具。已经发出的请求继续使用原服务，切换前排队或持有旧工具引用的调用会被拒绝，避免跨服务发送。授权后及恢复已有连接时发现远端工具，成功后注册技能规定的 12 项业务工具。连接发现完成后整体注册这 12 项工具的 schema；每次调用前刷新并验证远端 `inputSchema`，保留 MCP 原始结果。工具 schema 不属于下述 Skill 的逐步加载范围。上传和发送通过官方 `tools/pre-execute` 请求本次执行确认；传输层不自动重放写请求。
+面板和对话工具共用当前语言对应的连接。中文（`zh`）使用国内服务 `https://app.3chatai.cn/mcp`，官网为 [3Chat 国内站](https://www.3chatai.cn/)；其他语言使用海外服务 `https://app.3chat.ai/mcp`，官网为 [3Chat 海外站](https://3chat.ai)。两条连接分别保存在 DSH credentials 服务的 `threechat-mcp/oauth` 与 `threechat-global/oauth` 中，国内凭据槽沿用原值。语言切换只选择连接与工具，不发起授权；已有授权可恢复连接并发现工具。已经发出的请求继续使用原服务，切换前排队或持有旧工具引用的调用会被拒绝，避免跨服务发送。授权后及恢复已有连接时发现远端工具，成功后注册技能支持范围内、服务端当前可用且参数声明有效的业务工具。缺少或无效的工具只影响该项能力；目录为空时连接和状态检查仍可用。调用已撤下的工具返回 TOOL_UNAVAILABLE，不发起业务请求，不自动重试，也不使插件退出；每次调用前刷新并验证远端 `inputSchema`，保留 MCP 原始结果。工具 schema 不属于下述 Skill 的逐步加载范围。上传和发送通过官方 `tools/pre-execute` 请求本次执行确认；传输层不自动重放写请求。
 
 ## 区域文案与替换位置
 
@@ -96,11 +96,11 @@ Skill 的声明链为 `dsh.bundle.patch` → `cordis.patch.yml` → `@deepseek-a
 
 ## 兼容与验证范围
 
-当前本地依赖验证针对 DSH `0.2.0-rc.2` 系列接口、Cordis `4.0.4`、Schemastery `3.18.4`，运行要求 Node.js `>=22`。原生面板使用 Typert strict descriptor 的 `create`，并在远程服务就绪后注册 `plugins.bundle.config` 插槽；插槽约定见[官方 UI 插件管理说明](https://github.com/deepseek-ai/deepseek-harness/blob/master/packages/client/ui-plugin-manager/README.md)。
+开发依赖固定构建与测试基线，不限制用户的 DSH 版本；运行要求 Node.js `>=22`。原生面板使用 Typert strict descriptor 的 `create`，并在远程服务就绪后注册 `plugins.bundle.config` 插槽；插槽约定见[官方 UI 插件管理说明](https://github.com/deepseek-ai/deepseek-harness/blob/master/packages/client/ui-plugin-manager/README.md)。
 
 已执行的本地测试覆盖 OAuth、12 项业务工具、执行确认、资源回收和实际 `.tgz` 中的 Cordis 注册。Skill 测试直接调用官方 filesystem provider 和 `ctx.skills.list/get`，验证目录元数据不含正文、正文不内联参考，以及卸载后技能消失。测试使用本地模拟服务。
 
-`skill({name})` 与 `resourceBase` 的宿主加载行为还经过官方契约静态核对。真实模型自动选取 Skill、完整桌面会话、安装、重启、升级及真实渠道发送仍未验收；接口测试通过不代表这些流程已通过。
+`skill({name})` 与 `resourceBase` 的宿主加载行为还经过官方契约静态核对。2026-10-10 已在官方源码构建版 DSH `0.2.1-alpha.2` 验证插件 2.1.2 的安装、同 URL 缓存重装、启用，以及中英文模型加载 Skill 后各一次真实只读查询；服务均返回 code 200、total 0。该结果对应修改前的 CI 产物，后续源码变更另以本地回归验证。真实渠道发送和单独重启回归仍未验收。
 
 ## 发布范围
 
@@ -123,9 +123,9 @@ description:
   zh: '将 DeepSeek Harness 接入 3Chat，查询客户与会话、读取上下文、确认后发送消息并跟踪批次结果。'
 ```
 
-本地已有 `dsh.bundle`、对应 patch、真实运行代码及官方包的 peerDependencies。条目指向固定文件名的最新 Release 附件；每次发布仍需先验证最终 `.tgz`。当前宿主的远程 tarball 缓存问题未修复，社区条目的直接 URL 安装仍有该限制；用户安装按上述本地文件流程执行。
+本地已有 `dsh.bundle`、对应 patch、真实运行代码及官方包的 peerDependencies。条目指向固定文件名的最新 Release 附件；每次发布仍需先验证最终 `.tgz`。旧宿主的远程 tarball 缓存限制见上文；升级环境已验证远程安装，下载后导入本地文件仍可使用。
 
-提交前将这次源码与文档同步到目标仓库，添加 `dsh-plugin` topic，并确认仓库创建满一天、仍在维护且未被重复收录。社区 CI 与维护者审核由对方执行。本地测试范围见上文，目标 DSH 桌面安装与真实渠道流程仍需验收。
+提交前将这次源码与文档同步到目标仓库，添加 `dsh-plugin` topic，并确认仓库创建满一天、仍在维护且未被重复收录。社区 CI 与维护者审核由对方执行。本地测试范围见上文，后续版本仍需按目标宿主复查；真实渠道发送尚未验收。
 
 ## CI 与标签发布
 
@@ -134,3 +134,5 @@ PR 和 main 更新运行 CI / check：检查已跟踪文件、扫描 Git 历史�
 先将版本变更合入 main 并确认 CI 通过，再推送与 package.json 一致的 v<version> 标签。Release 要求标签提交属于 main，重新完成同样检查后发布 3chat-customer-growth.tgz、SHA256SUMS 和记录源码提交的 source.json。含预发布后缀的版本标记为 prerelease；未推送标签时不会发布。不要移动已发布标签，修订使用新版本。
 
 Actions 固定完整提交 SHA；构建只有读取权限，checkout 不保存凭据。仅发布任务拥有 contents: write，下载已验证构件、核对校验和并发布，不执行项目源码或安装依赖。秘密扫描器固定版本和下载哈希，并先检测合成凭据确认有效。
+
+标准 `npm pack` 使用 `prepack` 自动构建运行代码；`npm run pack` 使用同一构建钩子并生成移除开发元数据的 Release 包。两者均应包含全部声明的运行入口。

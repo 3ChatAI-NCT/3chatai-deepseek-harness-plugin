@@ -72,11 +72,10 @@ export async function apply(ctx) {
   };
   const replace = catalog => {
     if (disposed) return;
-    if (!Array.isArray(catalog) || (catalog.length !== 0 && (
-        catalog.length !== businessNames.size ||
-        new Set(catalog.map(tool => tool.name)).size !== businessNames.size ||
-        catalog.some(tool => !businessNames.has(tool.name) || !tool.inputSchema || typeof tool.inputSchema !== 'object')))) {
-      throw new Error('3Chat requires a complete catalog of the twelve supported business tools.');
+    if (!Array.isArray(catalog) || (
+        new Set(catalog.map(tool => tool.name)).size !== catalog.length ||
+        catalog.some(tool => !businessNames.has(tool.name) || !tool.inputSchema || typeof tool.inputSchema !== 'object'))) {
+      throw new Error('Invalid 3Chat tool definitions.');
     }
     refreshControls();
     // Build the complete generation before changing the host registry.

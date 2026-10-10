@@ -43,4 +43,5 @@ for (const [directory, info] of dependencies) {
   }
 }
 await writeFile(`${destination}/THIRD_PARTY_NOTICES.md`, notices.join('\n\n'));
-console.log(`Built ${manifest.name}@${manifest.version} at ${destination}`);
+// Keep npm pack --json stdout parseable when this runs as its prepack hook.
+console.error(`Built ${manifest.name}@${manifest.version} at ${destination}`);

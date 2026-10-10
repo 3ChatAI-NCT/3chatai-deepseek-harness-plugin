@@ -88,7 +88,8 @@
   },
   "scripts": {
     "build": "node scripts/build.mjs",
-    "pack": "npm run build && node scripts/pack.mjs",
+    "prepack": "npm run build",
+    "pack": "node scripts/pack.mjs",
     "test": "node --test test/*.test.mjs"
   },
   "engines": {

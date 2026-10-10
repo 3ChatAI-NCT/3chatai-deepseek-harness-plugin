@@ -403,15 +403,21 @@ export class ThreeChatConnection {
         nextAction: this.locale === 'en' ? 'Open 3Chat Customer Growth and connect your international account.' : '打开「' + PLUGIN_LOCATION + '」连接账号，再继续原任务。' };
       const write = WRITE_TOOLS.has(toolName);
       const grant = await this.grant();
-      if (write && typeof grant.tokens?.scope === 'string' && !scopesOf(grant).includes('messages:write')) {
-        this.needsAuthorization = true;
-        return { status: 'connection-required', message: this.locale === 'en' ? 'The grant lacks messages:write. Reconnect and review permissions.' : '当前授权缺少 messages:write，请在插件页重新连接并审阅权限。' };
-      }
       let dispatched = false;
       try {
         const result = await this.withSession(async (client, requestSignal) => {
           await this.discover(client);
           const tool = this.catalog.tools.get(toolName);
+          if (!tool) return {
+            status: 'tool-unavailable', code: 'TOOL_UNAVAILABLE', isError: true, tool: toolName,
+            message: this.locale === 'en' ? 'This tool is not currently available for this account. Other available tools can still be used.' : '当前账号暂不可用此工具，其余可用工具仍可继续使用。',
+            availableTools: [...this.catalog.tools.keys()],
+            nextAction: this.locale === 'en' ? 'Use an available tool, or explain that this operation is unavailable. Do not invent a result or retry automatically.' : '使用当前可用工具，或说明此操作暂不可用；不要编造结果或自动重试。',
+          };
+          if (write && typeof grant.tokens?.scope === 'string' && !scopesOf(grant).includes('messages:write')) {
+            this.needsAuthorization = true;
+            return { status: 'connection-required', message: this.locale === 'en' ? 'The grant lacks messages:write. Reconnect and review permissions.' : '当前授权缺少 messages:write，请在插件页重新连接并审阅权限。' };
+          }
           const request = validateArguments(tool, args);
           dispatched = true;
           // A single explicit call. Never replay a write after a timeout or

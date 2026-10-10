@@ -39,20 +39,23 @@ function validatorFor(tool) {
 
 export function prepareCatalog(tools) {
   const catalog = new Map();
+  const duplicates = new Set();
   for (const tool of tools) {
-    if (!TOOL_NAMES.includes(tool.name)) continue;
-    if (catalog.has(tool.name) || tool.inputSchema?.type !== 'object')
-      throw new ToolContractError('CAPABILITY_CHANGED', '3Chat 工具目录重复或参数声明无效。');
-    // Compile before publishing a generation; malformed schemas leave the old
-    // generation intact. Never coerce defaults or project away input fields.
+    if (!tool || !TOOL_NAMES.includes(tool.name) || duplicates.has(tool.name)) continue;
+    if (catalog.has(tool.name)) {
+      catalog.delete(tool.name);
+      duplicates.add(tool.name);
+      continue;
+    }
+    if (tool.inputSchema?.type !== 'object') continue;
+    // Omit unusable capabilities individually. Keep server schemas unchanged;
+    // never invent arguments or retain a tool removed from the live catalog.
     const copy = structuredClone(tool);
     try { validatorFor(copy); }
-    catch { throw new ToolContractError('CAPABILITY_CHANGED', '3Chat 参数声明暂不受支持，请联系维护者。'); }
+    catch { continue; }
     catalog.set(tool.name, copy);
   }
-  if (TOOL_NAMES.some(name => !catalog.has(name)))
-    throw new ToolContractError('CAPABILITY_CHANGED', '3Chat 未提供 Skill 1.0.4 声明的完整工具目录，请核对服务与权限。');
-  return new Map(TOOL_NAMES.map(name => [name, catalog.get(name)]));
+  return new Map(TOOL_NAMES.filter(name => catalog.has(name)).map(name => [name, catalog.get(name)]));
 }
 
 export function validateArguments(tool, args) {
