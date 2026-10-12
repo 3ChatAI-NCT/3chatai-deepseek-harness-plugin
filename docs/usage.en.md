@@ -59,6 +59,6 @@ The assistant checks the original batch’s individual results. Processing compl
 | Search works, but sending fails | Check the channel, sender account, grant, and returned error. Follow the service’s suggested action. |
 | The Agent does not answer replies | Check the incoming channel, Agent reception setup, and reply capabilities in 3Chat. Reauthorizing the plugin does not replace that setup. |
 | Sign-in is required again | Reconnect in the panel and complete browser authorization. |
-| You want to disconnect | Disconnecting removes this device’s credentials. Revoke the organization-side grant separately in 3Chat if needed. |
+| You want to disconnect | Disconnecting clears this device’s access token, refresh token, and pending authorization while retaining its client registration for reconnection. Revoke the organization-side grant separately in 3Chat if needed. |
 
 WhatsApp template sending requires the customer’s YCloud-linked account and an approved template. See the [tool interface guide](development.en.md) for details, host compatibility, and source builds.

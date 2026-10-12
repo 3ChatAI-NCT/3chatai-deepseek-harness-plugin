@@ -1,5 +1,5 @@
 import { Client, StreamableHTTPClientTransport, UnauthorizedError } from '@modelcontextprotocol/client';
-import { beginAuthorization, completeAuthorization, OAUTH_SCOPE } from './oauth/flow.js';
+import { beginAuthorization, completeAuthorization, OAUTH_SCOPE, OAUTH_CLIENT_NAME } from './oauth/flow.js';
 import { createOAuthClientProvider } from './oauth/provider.js';
 import { startCallbackListener, DEFAULT_LOOPBACK_PORT, DEFAULT_CALLBACK_TIMEOUT_MS } from './oauth/callback.js';
 import { readGrant, toStorableGrant } from './oauth/credentials.js';
@@ -221,7 +221,7 @@ export class ThreeChatConnection {
           delete seed.pending;
           replace(seed);
           return beginAuthorization({ serverUrl: this.serverUrl, redirectUrl: listener.redirectUri,
-            seed, persistFor, clientName: this.productTitle, scope: OAUTH_SCOPE, fetchFn: this.boundedFetch(controller) });
+            seed, persistFor, clientName: OAUTH_CLIENT_NAME, scope: OAUTH_SCOPE, fetchFn: this.boundedFetch(controller) });
         }, generation);
         if (generation !== this.generation || this.closed) throw new ConnectionError('CANCELLED', 'Cancelled');
         const grant = await this.grant();
@@ -257,7 +257,7 @@ export class ThreeChatConnection {
         this.requests.add(attempt.controller);
         await this.transaction(async (seed, persistFor) => {
           await completeAuthorization({ serverUrl: this.serverUrl, redirectUrl: attempt.listener.redirectUri,
-            seed, persistFor, clientName: this.productTitle, authorizationCode: callback.code, iss: callback.iss,
+            seed, persistFor, clientName: OAUTH_CLIENT_NAME, authorizationCode: callback.code, iss: callback.iss,
             scope: OAUTH_SCOPE, fetchFn: this.boundedFetch(attempt.controller) });
         }, attempt.generation);
         this.needsAuthorization = false;
@@ -312,7 +312,15 @@ export class ThreeChatConnection {
       const lateAttempt = this.attempt;
       this.attempt = undefined;
       if (lateAttempt) { lateAttempt.controller.abort(); await lateAttempt.listener.close(); }
-      await this.credentials.deleteRecord(this.credentialKey);
+      await this.transaction(async (seed, _persist, replace) => {
+        if (Object.keys(seed).length === 0) return;
+        // Keep the client identity and its service binding, never the authorization.
+        const registration = {};
+        for (const key of ['clientInformation', 'discoveryState', 'authorizationServerUrl', 'resourceUrl']) {
+          if (seed[key] !== undefined) registration[key] = seed[key];
+        }
+        replace(registration);
+      });
       this.fault = undefined; this.resetCatalog(); this.lastCheckedAt = undefined; this.needsAuthorization = false;
       return this.status();
     });
@@ -332,7 +340,7 @@ export class ThreeChatConnection {
         const redirectUrl = seed.clientInformation?.redirect_uris?.[0] ?? `http://127.0.0.1:${this.loopbackPort}/oauth/3chat-mcp-callback`;
         const provider = createOAuthClientProvider({
           redirectUrl, seed, persist: persistFor(seed),
-          clientMetadata: { client_name: this.productTitle, redirect_uris: [redirectUrl],
+          clientMetadata: { client_name: OAUTH_CLIENT_NAME, redirect_uris: [redirectUrl],
             grant_types: ['authorization_code', 'refresh_token'], response_types: ['code'],
             token_endpoint_auth_method: 'none', scope: OAUTH_SCOPE },
           onRedirect: () => { throw new ConnectionError('INTERACTIVE_AUTH_REQUIRED', 'Sign in again'); },

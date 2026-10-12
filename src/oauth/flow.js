@@ -3,6 +3,7 @@ import { createOAuthClientProvider } from './provider.js';
 
 /** Scope required by Skill 1.0.4; the SDK must never default to all advertised scopes. */
 export const OAUTH_SCOPE = 'customers:read messages:write';
+export const OAUTH_CLIENT_NAME = '3Chat 私域客户运营 DeepSeek Harness OAuth 渠道';
 
 class FlowError extends Error {
   constructor(code, message) {
@@ -28,7 +29,7 @@ function createProvider({ redirectUrl, persistFor, seed = {}, scope, onRedirect,
 
 /** Run SDK discovery and registration until a browser authorization URL is available. */
 export async function beginAuthorization({ serverUrl, redirectUrl, persistFor, seed,
-  scope = OAUTH_SCOPE, fetchFn, clientName = '3Chat 私域客户运营' }) {
+  scope = OAUTH_SCOPE, fetchFn, clientName = OAUTH_CLIENT_NAME }) {
   let authorizationUrl;
   const provider = createProvider({ redirectUrl, persistFor, seed, scope, clientName,
     onRedirect: url => { authorizationUrl = url; } });
@@ -55,7 +56,7 @@ export function assertRequestedScope(authorizationUrl, requestedScope = OAUTH_SC
 
 /** Exchange the validated loopback code through the SDK, then discard the nonce and verifier. */
 export async function completeAuthorization({ serverUrl, redirectUrl, persistFor, seed,
-  authorizationCode, iss, scope = OAUTH_SCOPE, fetchFn, clientName = '3Chat 私域客户运营' }) {
+  authorizationCode, iss, scope = OAUTH_SCOPE, fetchFn, clientName = OAUTH_CLIENT_NAME }) {
   // The listener already extracted the decoded code. OAuth codes are opaque, including punctuation.
   if (typeof authorizationCode !== 'string' || authorizationCode.length === 0) {
     throw new FlowError('NO_CODE', 'Expected a nonempty authorization code from the loopback listener');
