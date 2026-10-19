@@ -30,6 +30,10 @@ jobs:
         run: npm ci
       - name: Build and verify installation package
         run: npm run pack
+      - name: Reject stale committed runtime files
+        run: git diff --exit-code -- dist/
+      - name: Verify Git installation without build approval
+        run: npm exec --yes --package=pnpm@11.28.5 -- node scripts/check-git-install.mjs
       - name: Test final installation package
         run: npm test
       - name: Prepare release assets

@@ -2,46 +2,27 @@
 
 [中文](development.md) · [English](development.en.md) · [Product guide](../README.en.md)
 
-## Install the prebuilt Release
+## Repository installation and development
 
-In the latest official [DeepSeek Harness](https://www.deepseek.com/harness/), open **Plugins → Add plugin**, paste this full URL, then install and enable it:
+On official DeepSeek Harness 0.2.1-rc.2 or newer, open Plugins → Add plugin and paste:
 
 ```text
-https://github.com/3ChatAI-NCT/3chatai-deepseek-harness-plugin/releases/latest/download/3chat-customer-growth.tgz
+https://github.com/3ChatAI-NCT/3chatai-deepseek-harness-plugin
 ```
 
-The URL points to the prebuilt GitHub Release package; no source compilation is needed. DSH does not currently auto-update plugins; to upgrade, uninstall and reinstall using the same URL. If an older host encounters the cache issue below, download and keep the `.tgz` file and paste its full local path into the dialog.
+The default branch ships the runtime files in `dist/`. Git installation does not execute lifecycle build scripts or install development tools. Follow DSH’s activation/restart prompt; OAuth authorization is a separate first-use step. Uninstall and reinstall the same URL to upgrade. The prebuilt [Release archive](https://github.com/3ChatAI-NCT/3chatai-deepseek-harness-plugin/releases/latest/download/3chat-customer-growth.tgz) remains an alternative.
 
-The pnpm 11.7.0 bundled with DSH 0.2.0-rc.2 can write a lock entry without integrity when reusing a remote tarball cache, causing a later installation to fail with `ERR_PNPM_MISSING_TARBALL_INTEGRITY`. Pinned release URLs are also affected. Installing a local `.tgz` avoids this path without deleting user lockfiles, clearing caches, or disabling integrity checks. Repeated local installation has been verified; remote installation and cached reinstallation passed on the official source build of DSH 0.2.1-alpha.2 with pnpm 11.28.5. Older hosts can keep using local archives.
-
-## Build from source
-
-Use Node.js 22 or later. Run from this repository's root:
+For development, use Node.js 22 or newer:
 
 ```sh
 npm ci
 npm run pack
+npm test
 ```
 
-The build entry point is `scripts/build.mjs`; packaging uses `scripts/pack.mjs`. Compiled files go into `dist/`, and the archive is `dist/3chat-customer-growth-2.1.2.tgz`. End users install the prebuilt `.tgz`. Runtime `exports` in `package.json` point to `dist/`.
+`npm run pack` explicitly builds and creates `dist/3chat-customer-growth-<version>.tgz`. Ordinary `npm pack` uses the committed runtime files without rebuilding. Run `npm run build` after source changes and commit its six runtime outputs with the source. CI rebuilds and rejects stale runtime files. Tarballs, release metadata, caches, and node_modules remain untracked. Release packaging removes scripts and development dependencies.
 
-Only prebuilt `.tgz` installation is currently supported. Git excludes `dist/`, and the repository has no `prepare` script, so direct source installation with `dsh plugin add github:…` is unsupported. Use `npm run pack` above to compile before packaging; `npm pack` alone does not compile the source. This follows the [official packaging guide](https://deepseek-harness.github.io/deepseek-harness/en/develop/basic/publish) distinction between source and prebuilt distributions.
-
-The archive contains runtime code, the bundled skill, bilingual documentation, and license files, with no install-time scripts. Cordis, Schemastery, Typert, and React use host-provided modules. Runtime peer ranges are `*`, with no DSH version restriction. `devDependencies` pin only the build and test environment and are removed during packaging. Official DSH owns installation and loading checks. Restart DSH after updating Host modules.
-
-## Directory responsibilities
-
-```text
-src/          Runtime code: entry point, connection, tools, OAuth, and UI
-references/   Skill and supporting resources, with a single source copy
-scripts/      Build, packaging, and Skill integrity checks
-docs/         Bilingual usage and development documentation
-dist/         Compiled JS, locales, third-party notices, and tgz; ignored by Git
-```
-
-`src/regions.js` defines regional endpoints, credential keys, and copy; `src/index.js` registers the service, `src/connection.js` manages the connection and MCP calls, and `src/tools.js` exposes tools to the assistant. OAuth lives in `src/oauth/`; the native panel and translations live in `src/ui/`. The shared UI protocol is in `src/protocol.js`, and live input validation is in `src/tool-schema.js`.
-
-Building generates runtime files without copying the README or Skill. Packaging assembles the installation archive in a system temporary directory and removes that directory afterwards. The workspace therefore has one Skill source, and the archive includes the same source content.
+`src/` owns runtime source, `references/` the single Skill source, `scripts/` build and validation, `docs/` documentation, and `dist/` the generated JS, locales, and third-party license notices. Build output never duplicates the Skill tree.
 
 ## Cordis service and consumers
 
@@ -137,4 +118,4 @@ Actions are pinned to full commit SHAs. Build jobs have read-only permissions an
 
 Register only supported business tools currently available from the server with valid parameter schemas. A missing or invalid tool affects only that capability; an empty catalog keeps connection controls available. A stale call returns TOOL_UNAVAILABLE without dispatching a business request, retrying automatically, or exiting the plugin.
 
-Standard `npm pack` builds runtime entries through `prepack`. `npm run pack` uses the same build hook and stages a Release archive without development metadata. Both must include every declared runtime entry.
+Git installation is verified in fresh profiles with cold and warm pnpm stores. Installation never requires lifecycle build scripts.

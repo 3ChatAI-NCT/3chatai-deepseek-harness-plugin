@@ -2,46 +2,27 @@
 
 [中文](development.md) · [English](development.en.md) · [产品说明](../README.md)
 
-## 安装预构建 Release
+## 仓库安装与开发
 
-在官方最新版本 [DeepSeek Harness](https://www.deepseek.com/harness/) 的「插件 → 添加插件」中粘贴以下完整地址，安装后启用：
+在官方 DeepSeek Harness 0.2.1-rc.2 或更新版本的「插件 → 添加插件」中粘贴：
 
 ```text
-https://github.com/3ChatAI-NCT/3chatai-deepseek-harness-plugin/releases/latest/download/3chat-customer-growth.tgz
+https://github.com/3ChatAI-NCT/3chatai-deepseek-harness-plugin
 ```
 
-该地址指向 GitHub Release 的预构建安装包，无需编译源码。DSH 当前不自动升级插件，升级时先卸载，再使用同一地址安装新版。旧宿主若出现下述缓存问题，可以下载并保留 `.tgz`，在添加插件时粘贴文件的完整路径。
+默认分支包含 `dist/` 运行产物，Git 安装无需执行构建脚本或安装开发工具。安装后按 DSH 提示启用或重启；首次使用仍需 OAuth 授权。升级时先卸载，再粘贴同一地址安装。[Release 预构建包](https://github.com/3ChatAI-NCT/3chatai-deepseek-harness-plugin/releases/latest/download/3chat-customer-growth.tgz) 仍可作为替代方式。
 
-DSH 0.2.0-rc.2 随附的 pnpm 11.7.0 在复用远程 tarball 缓存时可能写出缺少 integrity 的锁条目，后续安装报 `ERR_PNPM_MISSING_TARBALL_INTEGRITY`。固定版本 URL 也会受影响。本地 `.tgz` 安装绕开该路径；无需删除用户锁文件、清空缓存或关闭完整性校验。此安装流程已验证重复安装，升级到内置 pnpm 11.28.5 的官方源码版 DSH 0.2.1-alpha.2 后，远程首次安装及缓存重装均已通过；旧宿主仍使用本地文件流程。
-
-## 从源码构建
-
-需要 Node.js 22 或以上版本。在本仓库根目录运行：
+开发需要 Node.js 22 或以上版本：
 
 ```sh
 npm ci
 npm run pack
+npm test
 ```
 
-构建入口为 `scripts/build.mjs`，打包入口为 `scripts/pack.mjs`。编译文件位于 `dist/`，安装包位于 `dist/3chat-customer-growth-2.1.2.tgz`。安装用户直接使用预构建 `.tgz`。运行入口由 `package.json` 的 `exports` 指向 `dist/`。
+`npm run pack` 显式构建并生成 `dist/3chat-customer-growth-<version>.tgz`。普通 `npm pack` 使用已提交产物，不再自动构建。修改源码后运行 `npm run build`，将六个运行产物与源码一起提交；CI 重新构建并拒绝过期产物。安装包、发布元数据、缓存和 node_modules 不入 Git。Release 打包继续移除脚本和开发依赖。
 
-当前发布入口只承诺预构建 `.tgz`：Git 不跟踪 `dist/`，仓库也没有 `prepare`，因此不支持直接用 `dsh plugin add github:…` 安装源码。请使用上述 `npm run pack` 先编译再打包，单独运行 `npm pack` 不会触发编译。此选择符合[官方打包说明](https://deepseek-harness.github.io/deepseek-harness/en/develop/basic/publish)对源码与预构建产物的区分。
-
-安装包包含运行代码、内置 Skill、双语说明和许可文件，无安装时脚本。Cordis、Schemastery、Typert 与 React 使用宿主提供的模块；运行时 peer 版本范围为 `*`，不限定 DSH 版本。`devDependencies` 仅锁定构建和测试所用版本，打包时移除。安装与加载检查由 DSH 官方执行。更新 Host 模块后重启 DSH。
-
-## 目录职责
-
-```text
-src/          插件运行代码：入口、连接、工具、OAuth 和界面
-references/   Skill 与配套资源，仅这一份源文件
-scripts/      构建、打包及 Skill 完整性检查
-docs/         双语使用与开发说明
-dist/         编译后的 JS、语言文件、第三方许可及 tgz；不入 Git
-```
-
-`src/regions.js` 定义服务地址、凭据键和区域文案；`src/index.js` 注册服务，`src/connection.js` 管理连接与 MCP 调用，`src/tools.js` 向助手提供工具。OAuth 实现在 `src/oauth/`，原生界面和翻译在 `src/ui/`，共享界面协议在 `src/protocol.js`，实时参数校验在 `src/tool-schema.js`。
-
-构建只生成运行文件，不复制 README 或 Skill。打包在系统临时目录组装完整安装包，完成后自动清除临时目录。因此工作区只有一份 Skill，安装包中包含同一份源内容。
+`src/` 保存运行源码，`references/` 保存唯一一份 Skill，`scripts/` 负责构建验证，`docs/` 保存说明，`dist/` 保存生成的 JS、语言文件和第三方许可。构建不复制 Skill 源文件。
 
 ## Cordis 服务与消费者
 
@@ -135,4 +116,4 @@ PR 和 main 更新运行 CI / check：检查已跟踪文件、扫描 Git 历史�
 
 Actions 固定完整提交 SHA；构建只有读取权限，checkout 不保存凭据。仅发布任务拥有 contents: write，下载已验证构件、核对校验和并发布，不执行项目源码或安装依赖。秘密扫描器固定版本和下载哈希，并先检测合成凭据确认有效。
 
-标准 `npm pack` 使用 `prepack` 自动构建运行代码；`npm run pack` 使用同一构建钩子并生成移除开发元数据的 Release 包。两者均应包含全部声明的运行入口。
+普通 `npm pack` 使用已提交运行文件；`npm run pack` 显式构建并生成移除开发元数据的 Release 包。Git 安装在冷缓存与热缓存的全新 profile 中验证，无安装构建脚本。

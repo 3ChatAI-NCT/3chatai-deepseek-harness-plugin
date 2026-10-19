@@ -13,9 +13,15 @@
 !/references/
 !/scripts/
 !/test/
+!/dist/
 
 node_modules/
-dist/
+/dist/*
+!/dist/index.js
+!/dist/tools.js
+!/dist/client.js
+!/dist/locale/
+!/dist/THIRD_PARTY_NOTICES.md
 .DS_Store
 .env
 .env.*

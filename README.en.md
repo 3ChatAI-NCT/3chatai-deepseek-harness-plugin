@@ -37,18 +37,18 @@ These demonstrate discovery, drafting, and sending. Revise a draft before sendin
 
 ## Get started
 
-Use the latest official version of [**DeepSeek Harness**](https://www.deepseek.com/harness/) and a **3Chat organization account** with customer access and channel sending permissions.
+Use the official 0.2.1-rc.2 or newer version of [**DeepSeek Harness**](https://www.deepseek.com/harness/) and a **3Chat organization account** with customer access and channel sending permissions.
 
 1. Prepare your workspace and connect channels at [3Chat Global](https://3chat.ai). For autonomous reception, configure the channel’s Agent, knowledge, and human handoff rules.
-2. Open DSH **Plugins → Add plugin**, paste the [full URL of the latest package](https://github.com/3ChatAI-NCT/3chatai-deepseek-harness-plugin/releases/latest/download/3chat-customer-growth.tgz), then install and enable it:
+2. Open DSH **Plugins → Add plugin**, paste the [full repository URL](https://github.com/3ChatAI-NCT/3chatai-deepseek-harness-plugin), then install and enable it:
 
    ```text
-   https://github.com/3ChatAI-NCT/3chatai-deepseek-harness-plugin/releases/latest/download/3chat-customer-growth.tgz
+   https://github.com/3ChatAI-NCT/3chatai-deepseek-harness-plugin
    ```
 3. Open “3Chat Customer Growth,” select “Connect 3Chat,” and authorize the intended organization account in your browser.
 4. Return to chat. Start by finding a known customer and preparing a follow-up draft.
 
-Use the prebuilt GitHub Release package; no compilation is needed. To upgrade, uninstall and reinstall using the URL above. See the [development guide](docs/development.en.md) to build locally.
+The repository includes prebuilt runtime files; installation needs no compilation or build-script approval. Follow DSH’s enable or restart prompt. To upgrade, uninstall and reinstall using the same URL. The [Release archive](https://github.com/3ChatAI-NCT/3chatai-deepseek-harness-plugin/releases/latest/download/3chat-customer-growth.tgz) remains an alternative. See the [development guide](docs/development.en.md) to build locally.
 
 The DSH interface language selects the service: Chinese uses the domestic service; other languages use the global service. Each service requires its own authorization. Uploads and sends also require DSH approval for that execution. Customer and channel access follow your organization’s grant.
 
