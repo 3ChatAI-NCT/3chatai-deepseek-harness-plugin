@@ -2,7 +2,7 @@
 
 [中文](README.md) · [English](README.en.md)
 
-Run customer outreach across Instagram, Facebook Messenger, and WhatsApp from DeepSeek Harness. Review customer context, prepare personalized messages, and send through connected 3Chat channels after your confirmation. When customers reply, your configured 3Chat Agent can continue the conversation 24/7, answer questions, handle objections, and guide the next step or hand off to a person. Access and actions follow your organization’s 3Chat permissions.
+3Chat Customer Growth is an open-source plugin for DeepSeek Harness. Run customer outreach across Instagram, Facebook Messenger, and WhatsApp from DeepSeek Harness. Review customer context, prepare personalized messages, and send through connected 3Chat channels after your confirmation. When customers reply, your configured 3Chat Agent can continue the conversation 24/7, answer questions, handle objections, and guide the next step or hand off to a person. Access and actions follow your organization’s 3Chat permissions.
 
 ## From customer insight to the next conversation
 
@@ -48,7 +48,7 @@ Use the official 0.2.1-rc.2 or newer version of [**DeepSeek Harness**](https://w
 3. Open “3Chat Customer Growth,” select “Connect 3Chat,” and authorize the intended organization account in your browser.
 4. Return to chat. Start by finding a known customer and preparing a follow-up draft.
 
-The repository includes prebuilt runtime files; installation needs no compilation or build-script approval. Follow DSH’s enable or restart prompt. To upgrade, uninstall and reinstall using the same URL. The [Release archive](https://github.com/3ChatAI-NCT/3chatai-deepseek-harness-plugin/releases/latest/download/3chat-customer-growth.tgz) remains an alternative. See the [development guide](docs/development.en.md) to build locally.
+Install the 3Chat plugin by entering the repository URL above in **Plugins → Add plugin**. Enable it and authorize your 3Chat account to access customer operations directly in DeepSeek Harness conversations. To upgrade, uninstall and reinstall using the same URL. The [Release archive](https://github.com/3ChatAI-NCT/3chatai-deepseek-harness-plugin/releases/latest/download/3chat-customer-growth.tgz) remains an alternative. See the [development guide](docs/development.en.md) to build locally.
 
 The DSH interface language selects the service: Chinese uses the domestic service; other languages use the global service. Each service requires its own authorization. Uploads and sends also require DSH approval for that execution. Customer and channel access follow your organization’s grant.
 

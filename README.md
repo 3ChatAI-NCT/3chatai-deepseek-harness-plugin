@@ -2,7 +2,7 @@
 
 [中文](README.md) · [English](README.en.md)
 
-通过微信、企业微信、小红书、抖音等已连接渠道查询、筛选客户。向单个或批量客户定向发送个性化消息。客户产生回复后，已配置的 3Chat Agent 可接续上下文，提供 7×24 小时自主接待，持续完成需求沟通、产品答疑、异议处理和购买引导，帮助商家将客户洞察转化为真实触达和成交机会。
+3Chat 私域客户运营是面向 DeepSeek Harness 的开源插件。通过微信、企业微信、小红书、抖音等已连接渠道查询、筛选客户。向单个或批量客户定向发送个性化消息。客户产生回复后，已配置的 3Chat Agent 可接续上下文，提供 7×24 小时自主接待，持续完成需求沟通、产品答疑、异议处理和购买引导，帮助商家将客户洞察转化为真实触达和成交机会。
 
 ## 从客户洞察到下一轮沟通
 
@@ -48,7 +48,7 @@
 3. 打开“3Chat 私域客户运营”，点击“连接 3Chat”，在浏览器登录目标组织账号并授权。
 4. 返回对话，先查询一个已知客户，再准备一条跟进草稿。
 
-仓库已包含预构建运行文件，安装无需编译或批准构建脚本。安装后按 DSH 提示启用或重启；首次使用仍需登录 3Chat 并授权。升级时先卸载，再粘贴同一地址安装。也可使用 [Release 安装包](https://github.com/3ChatAI-NCT/3chatai-deepseek-harness-plugin/releases/latest/download/3chat-customer-growth.tgz)。自行构建见[开发说明](docs/development.md)。
+在「插件 → 添加插件」中输入上述仓库地址，即可安装 3Chat 插件。启用并完成账号授权后，即可在 DeepSeek Harness 对话中使用客户运营功能。升级时先卸载，再粘贴同一地址安装。也可使用 [Release 安装包](https://github.com/3ChatAI-NCT/3chatai-deepseek-harness-plugin/releases/latest/download/3chat-customer-growth.tgz)。自行构建见[开发说明](docs/development.md)。
 
 插件随 DSH 界面语言选择服务：中文连接国内服务，其他语言连接海外服务；两端分别授权。上传和发送还需通过 DSH 的本次执行确认。客户与渠道可见范围遵循组织授权。
 
